@@ -28,8 +28,9 @@ enum DataItem: Hashable {
 
 class HealthKitManager: NSObject {
     
-    let userNotificationCenter = UNUserNotificationCenter.current()
     static let shared = HealthKitManager()
+    
+    let userNotificationCenter = UNUserNotificationCenter.current()
     
     let healthStore = HKHealthStore()
     
@@ -114,7 +115,7 @@ class HealthKitManager: NSObject {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let startDay = Calendar.current.startOfDay(for: date)
         let lastDay = Date(timeInterval: (60 * 60 * 24)-1, since: startDay)
-        
+        print("startDay : \(startDay) / lastDay : \(lastDay)")
         let predicate = HKQuery.predicateForSamples(withStart: startDay, end: lastDay, options: .strictStartDate)
         let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum) { (query, result, error) in
             guard let result = result, let sum = result.sumQuantity() else {
@@ -144,8 +145,9 @@ class HealthKitManager: NSObject {
         }
         self.healthStore.execute(query)
         self.healthStore.enableBackgroundDelivery(for: stepType, frequency: .immediate) { (bool, error) in
-            print("bool : \(bool) / error : \(error)")
+            
         }
+ 
         
     }
     

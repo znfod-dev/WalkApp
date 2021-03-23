@@ -37,6 +37,29 @@ class MainVC: UIViewController {
     }
     
     func getData() {
+        
+        MotionManager.shared.requestAuth { (status) in
+            switch status {
+            case .authorized:
+
+                let startDay = Calendar.current.startOfDay(for: Date())
+                let lastDay = Date(timeInterval: (60 * 60 * 24)-1, since: startDay)
+                print("MotionManager startDay : \(startDay) / lastDay : \(lastDay)")
+                MotionManager.shared.queryCountingSteps(startDay: startDay, lastDay: lastDay) { (step) in
+                    print("MotionManager step : \(step)")
+                }
+                break
+            case .denied:
+                break
+            case .notDetermined:
+                break
+            case .restricted:
+                break
+            default:
+                break
+            }
+        }
+        
         HealthKitManager.shared.requestAuthorization { (success) in
             if success {
                 HealthKitManager.shared.readAllStepCount(last: 365) { (list) in
@@ -52,9 +75,12 @@ class MainVC: UIViewController {
                     }
                 }
                 HealthKitManager.shared.startUpdate(date: Date()) { (step) in
-                        DispatchQueue.main.async {
-                            self.stepCntLbl.text = "\(Int(step))"
-                        }
+                    DispatchQueue.main.async {
+                        self.stepCntLbl.text = "\(Int(step))"
+                    }
+                }
+                HealthKitManager.shared.readStepCount(date: Date()) { (step) in
+                    print("HealthKitManager step : \(step)")
                 }
             }else {
                 

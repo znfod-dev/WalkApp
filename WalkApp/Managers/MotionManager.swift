@@ -52,12 +52,15 @@ class MotionManager: NSObject {
             print("아직 정하지 못함")
             //
             if CMMotionActivityManager.isActivityAvailable() {
-                self.activityManager.startActivityUpdates(to: .main) { _ in
-                    if self.isUpdating == false {
-                        self.startCountingSteps()
-                    }
-                    success(.authorized)
+//                self.activityManager.startActivityUpdates(to: .main) { _ in
+//                    if self.isUpdating == false {
+//                        self.startCountingSteps()
+//                    }
+//                }
+                self.activityManager.startActivityUpdates(to: .main) { (activity) in
+                    
                 }
+                success(.authorized)
             }
             
             break
@@ -69,8 +72,8 @@ class MotionManager: NSObject {
             print("권한 확인됨")
             if CMMotionActivityManager.isActivityAvailable() {
                 self.activityManager.startActivityUpdates(to: .main) { _ in
-                    success(.authorized)
                 }
+                success(.authorized)
             }
             break
         case .denied:
@@ -91,14 +94,13 @@ class MotionManager: NSObject {
         }
     }
     
-    func queryCountingSteps(startDay:Date, lastDay:Date, success:@escaping (_ step:Int) -> Void) {
+    func queryCountingSteps(startDay:Date, lastDay:Date, success:@escaping (_ step:Double) -> Void) {
         print("from : \(startDay) ~ to : \(lastDay))")
-        let from = startDay.addingTimeInterval(60 * 60 * 9)
-        let to = lastDay.addingTimeInterval(60 * 60 * 9)
-        print("from : \(from) ~ to : \(to))")
+        let from = startDay
+        let to = lastDay
         self.pedometer.queryPedometerData(from: from, to: to) { (value, error) in
             if let pedData = value{
-                let step = pedData.numberOfSteps.intValue
+                let step = pedData.numberOfSteps.doubleValue
                 success(step)
             } else {
                 success(0)
@@ -121,6 +123,15 @@ class MotionManager: NSObject {
                 self.stepCnt = data.numberOfSteps.intValue
             }
             self.isUpdating = true
+        }
+    }
+    
+    func startCountingSteps( completion: @escaping (Double) -> Void) {
+        self.pedometer.startUpdates(from: Date()) { (data, error) in
+            guard let data = data else {
+                return
+            }
+            completion(data.numberOfSteps.doubleValue)
         }
     }
     
