@@ -115,7 +115,6 @@ class HealthKitManager: NSObject {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let startDay = Calendar.current.startOfDay(for: date)
         let lastDay = Date(timeInterval: (60 * 60 * 24)-1, since: startDay)
-        print("startDay : \(startDay) / lastDay : \(lastDay)")
         let predicate = HKQuery.predicateForSamples(withStart: startDay, end: lastDay, options: .strictStartDate)
         let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum) { (query, result, error) in
             guard let result = result, let sum = result.sumQuantity() else {
@@ -129,42 +128,9 @@ class HealthKitManager: NSObject {
         self.healthStore.execute(query)
     }
     
-    func startUpdate(date:Date, completion: @escaping (Double) -> Void) {
-        let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
-        let query: HKObserverQuery = HKObserverQuery(sampleType: stepType, predicate: nil) { [weak self] (query, completionHandler, error) in
-            if let err = error {
-                print("error : \(err)")
-                return
-            }
-            if let strongSelf = self {
-                strongSelf.readStepCount(date: date, completion: { (step) in
-                    completionHandler()
-                })
-            }
-            
-        }
-        self.healthStore.execute(query)
-        self.healthStore.enableBackgroundDelivery(for: stepType, frequency: .immediate) { (bool, error) in
-            
-        }
- 
+    func saveStep(step:Double) {
+        
         
     }
-    
-    //    func sendNotification(title:String, body:String) {
-    //        let notificationContent = UNMutableNotificationContent()
-    //        notificationContent.title = title
-    //        notificationContent.body = body
-    //        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
-    //        let request = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: trigger)
-    //        userNotificationCenter.add(request) { (error) in
-    //            if let error = error {
-    //                print("Notification Error: \(error)")
-    //                return
-    //            }
-    //        }
-    //    }
-    
-    
     
 }

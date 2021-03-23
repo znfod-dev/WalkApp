@@ -42,11 +42,16 @@ class MainVC: UIViewController {
             switch status {
             case .authorized:
 
-                let startDay = Calendar.current.startOfDay(for: Date())
-                let lastDay = Date(timeInterval: (60 * 60 * 24)-1, since: startDay)
-                print("MotionManager startDay : \(startDay) / lastDay : \(lastDay)")
-                MotionManager.shared.queryCountingSteps(startDay: startDay, lastDay: lastDay) { (step) in
-                    print("MotionManager step : \(step)")
+//                let startDay = Calendar.current.startOfDay(for: Date())
+//                let lastDay = Date(timeInterval: (60 * 60 * 24)-1, since: startDay)
+//                print("MotionManager startDay : \(startDay) / lastDay : \(lastDay)")
+//                MotionManager.shared.queryCountingSteps(startDay: startDay, lastDay: lastDay) { (step) in
+//                    print("MotionManager step : \(step)")
+//                }
+                MotionManager.shared.startCountingSteps { (step) in
+                    print("step : \(step)")
+                    
+                    
                 }
                 break
             case .denied:
@@ -74,14 +79,7 @@ class MainVC: UIViewController {
                         self.stepCntLbl.text = "\(Int(step))"
                     }
                 }
-                HealthKitManager.shared.startUpdate(date: Date()) { (step) in
-                    DispatchQueue.main.async {
-                        self.stepCntLbl.text = "\(Int(step))"
-                    }
-                }
-                HealthKitManager.shared.readStepCount(date: Date()) { (step) in
-                    print("HealthKitManager step : \(step)")
-                }
+                
             }else {
                 
             }
