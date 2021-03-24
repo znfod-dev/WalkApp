@@ -22,6 +22,20 @@ class MainVC: UIViewController {
     // MARK: Model objects
     var months = Array<MonthItem>()
     
+    var todayStep = 0 {
+        didSet {
+            DispatchQueue.main.async {
+                self.stepCntLbl.text = self.todayStep.withCommas()
+            }
+        }
+    }
+    var addStep: Int = 0 {
+        willSet(newVal) {
+            self.todayStep -= addStep
+            self.todayStep += newVal
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initUI()
@@ -36,23 +50,22 @@ class MainVC: UIViewController {
     
     }
     
+    func initNoti() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.dateChanged(_:)), name: .NSCalendarDayChanged, object: nil)
+    }
+    
     func getData() {
         
         MotionManager.shared.requestAuth { (status) in
             switch status {
             case .authorized:
-
 //                let startDay = Calendar.current.startOfDay(for: Date())
 //                let lastDay = Date(timeInterval: (60 * 60 * 24)-1, since: startDay)
 //                print("MotionManager startDay : \(startDay) / lastDay : \(lastDay)")
 //                MotionManager.shared.queryCountingSteps(startDay: startDay, lastDay: lastDay) { (step) in
 //                    print("MotionManager step : \(step)")
 //                }
-                MotionManager.shared.startCountingSteps { (step) in
-                    print("step : \(step)")
-                    
-                    
-                }
+                self.startCountingStep()
                 break
             case .denied:
                 break
@@ -75,14 +88,23 @@ class MainVC: UIViewController {
                     }
                 }
                 HealthKitManager.shared.readStepCount(date: Date()) { (step) in
-                    DispatchQueue.main.async {
-                        self.stepCntLbl.text = "\(Int(step))"
-                    }
+                    self.todayStep = Int(step)
                 }
                 
             }else {
                 
             }
+        }
+    }
+    
+    @objc func dateChanged(_ notification:Notification) {
+        MotionManager.shared.stopCountingSteps()
+    }
+    
+    func startCountingStep() {
+        MotionManager.shared.startCountingSteps { (step) in
+            print("step : \(step)")
+            self.addStep = Int(step)
         }
     }
     

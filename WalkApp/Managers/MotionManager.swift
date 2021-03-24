@@ -30,18 +30,10 @@ class MotionManager: NSObject {
             return CMPedometer.isStepCountingAvailable()
         }
     }
-    
-    var today = Date()
-    var todayStepCnt = 0
-    var stepCnt = 0
-    
     var isUpdating:Bool = false
     
     override init() {
         super.init()
-        
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.dateChanged(_:)), name: .NSCalendarDayChanged, object: nil)
         
     }
     
@@ -108,24 +100,6 @@ class MotionManager: NSObject {
         }
     }
     
-    func startCountingSteps() {
-//        print("startCountingSteps")
-        if isUpdating == false {
-            self.todayStepCnt = 0
-            self.pedometer.startUpdates(from: Date()) { (data, error) in
-                guard let data = data else {
-                    return
-                }
-                let value = data.numberOfSteps.intValue - self.stepCnt
-//                print("data.numberOfSteps.intValue : \(data.numberOfSteps.intValue)")
-//                print("self.stepCnt : \(self.stepCnt)")
-                self.addStep(value: value)
-                self.stepCnt = data.numberOfSteps.intValue
-            }
-            self.isUpdating = true
-        }
-    }
-    
     func startCountingSteps( completion: @escaping (Double) -> Void) {
         self.pedometer.startUpdates(from: Date()) { (data, error) in
             guard let data = data else {
@@ -136,28 +110,8 @@ class MotionManager: NSObject {
     }
     
     func stopCountingSteps() {
-//        print("stopCountingSteps")
-        if isUpdating {
-            self.pedometer.stopUpdates()
-            self.isUpdating = false
-            
-            self.stepCnt = 0
-        }
+        self.pedometer.stopUpdates()
     }
     
-    func addStep(value:Int) {
-        if isUpdating == true {
-            self.todayStepCnt += value
-            NotificationCenter.default.post(name: NSNotification.Name("Help"), object: nil, userInfo: [:])
-        }else {
-            
-        }
-    }
-    
-    @objc func dateChanged(_ notification:NSNotification) {
-        self.todayStepCnt = 0
-        self.today = Date()
-        self.addStep(value: 0)
-    }
     
 }

@@ -115,8 +115,9 @@ class HealthKitManager: NSObject {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let startDay = Calendar.current.startOfDay(for: date)
         let lastDay = Date(timeInterval: (60 * 60 * 24)-1, since: startDay)
-        let predicate = HKQuery.predicateForSamples(withStart: startDay, end: lastDay, options: .strictStartDate)
-        let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum) { (query, result, error) in
+        
+        let predicate = HKQuery.predicateForSamples(withStart: startDay, end: lastDay, options: [.strictStartDate, .strictEndDate])
+        let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: [.mostRecent, .cumulativeSum, .duration]) { (query, result, error) in
             guard let result = result, let sum = result.sumQuantity() else {
                 print("Failed to fetch steps = \(error?.localizedDescription ?? "N/A")")
                 completion(0.0)
@@ -128,9 +129,6 @@ class HealthKitManager: NSObject {
         self.healthStore.execute(query)
     }
     
-    func saveStep(step:Double) {
-        
-        
-    }
+    
     
 }
