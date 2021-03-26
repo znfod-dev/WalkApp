@@ -129,6 +129,12 @@ class HealthKitManager: NSObject {
         self.healthStore.execute(query)
     }
     
+    func getTodayStepCount(completion: @escaping (Double) -> Void) {
+        self.readStepCount(date: Date()) { (step) in
+            SingletonManager.shared.todayStep = 0.0
+            completion(step)
+        }
+    }
     
     
 }

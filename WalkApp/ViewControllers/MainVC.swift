@@ -29,6 +29,7 @@ class MainVC: UIViewController {
             }
         }
     }
+    
     var addStep: Int = 0 {
         willSet(newVal) {
             self.todayStep -= addStep
@@ -87,7 +88,7 @@ class MainVC: UIViewController {
                         self.collectionView.reloadData()
                     }
                 }
-                HealthKitManager.shared.readStepCount(date: Date()) { (step) in
+                HealthKitManager.shared.getTodayStepCount { (step) in
                     self.todayStep = Int(step)
                 }
                 

@@ -9,6 +9,7 @@ import WidgetKit
 import SwiftUI
 
 struct Provider: TimelineProvider {
+    
     func placeholder(in context: Context) -> WidgetEntry {
         WidgetEntry(date: Date(), walkCnt: 128)
     }
@@ -19,18 +20,17 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [WidgetEntry] = []
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
+        
         let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = WidgetEntry(date: entryDate, walkCnt: 0)
-            entries.append(entry)
+        let refreshDate = Calendar.current.date(byAdding: .minute, value: 5, to: currentDate)!
+      
+        HealthKitManager.shared.getTodayStepCount { (step) in
+            let entry = WidgetEntry(date: currentDate, walkCnt: Int(step))
+            let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+            completion(timeline)
         }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
+        
+        
     }
 }
 
@@ -54,19 +54,13 @@ struct WalkWidgetEntryView : View {
 @main
 struct WalkWidget: Widget {
     let kind: String = "WalkWidget"
-
+    
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             WalkWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")
-    }
-}
-
-struct WalkWidget_Previews: PreviewProvider {
-    static var previews: some View {
-        WalkWidgetEntryView(entry: WidgetEntry(date: Date(), walkCnt: 2138))
-            .previewContext(WidgetPreviewContext(family: .systemSmall))
+        
     }
 }

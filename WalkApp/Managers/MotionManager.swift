@@ -87,7 +87,6 @@ class MotionManager: NSObject {
     }
     
     func queryCountingSteps(startDay:Date, lastDay:Date, success:@escaping (_ step:Double) -> Void) {
-        print("from : \(startDay) ~ to : \(lastDay))")
         let from = startDay
         let to = lastDay
         self.pedometer.queryPedometerData(from: from, to: to) { (value, error) in
@@ -105,7 +104,9 @@ class MotionManager: NSObject {
             guard let data = data else {
                 return
             }
-            completion(data.numberOfSteps.doubleValue)
+            let step = data.numberOfSteps.doubleValue
+            SingletonManager.shared.addStep = step
+            completion(step)
         }
     }
     
