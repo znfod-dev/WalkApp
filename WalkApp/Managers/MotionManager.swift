@@ -49,10 +49,18 @@ class MotionManager: NSObject {
 //                        self.startCountingSteps()
 //                    }
 //                }
-                self.activityManager.startActivityUpdates(to: .main) { (activity) in
-                    
+                self.activityManager.queryActivityStarting(from: Date(), to: Date(), to: .main) { (list, error) in
+                    switch CMMotionActivityManager.authorizationStatus() {
+                    case .authorized:
+                        print("권한 확인됨")
+                            success(.authorized)
+                        break
+                    default:
+                        success(CMMotionActivityManager.authorizationStatus())
+                        break
+                    }
                 }
-                success(.authorized)
+                
             }
             
             break

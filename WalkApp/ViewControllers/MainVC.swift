@@ -15,27 +15,11 @@ class MainVC: UIViewController {
     @IBOutlet weak var stepCntLbl: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    let userNotificationCenter = UNUserNotificationCenter.current()
-    
     var dataSource: UICollectionViewDiffableDataSource<MonthItem, DataItem>!
     
     // MARK: Model objects
     var months = Array<MonthItem>()
     
-    var todayStep = 0 {
-        didSet {
-            DispatchQueue.main.async {
-                self.stepCntLbl.text = self.todayStep.withCommas()
-            }
-        }
-    }
-    
-    var addStep: Int = 0 {
-        willSet(newVal) {
-            self.todayStep -= addStep
-            self.todayStep += newVal
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,61 +37,38 @@ class MainVC: UIViewController {
     
     func initNoti() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.dateChanged(_:)), name: .NSCalendarDayChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.todayStepChanged(_:)), name: .TodayStepChanged, object: nil)
     }
     
     func getData() {
-        
-        MotionManager.shared.requestAuth { (status) in
-            switch status {
-            case .authorized:
-//                let startDay = Calendar.current.startOfDay(for: Date())
-//                let lastDay = Date(timeInterval: (60 * 60 * 24)-1, since: startDay)
-//                print("MotionManager startDay : \(startDay) / lastDay : \(lastDay)")
-//                MotionManager.shared.queryCountingSteps(startDay: startDay, lastDay: lastDay) { (step) in
-//                    print("MotionManager step : \(step)")
+        SingletonManager.shared.checkAuthorization()
+//        HealthKitManager.shared.requestAuthorization { (success) in
+//            if success {
+//                HealthKitManager.shared.readAllStepCount(last: 365) { (list) in
+//                    self.months = self.sortByMonth(dayList: list)
+//                    DispatchQueue.main.async {
+//                        self.applySnapshot()
+//                        self.collectionView.reloadData()
+//                    }
 //                }
-                self.startCountingStep()
-                break
-            case .denied:
-                break
-            case .notDetermined:
-                break
-            case .restricted:
-                break
-            default:
-                break
-            }
-        }
-        
-        HealthKitManager.shared.requestAuthorization { (success) in
-            if success {
-                HealthKitManager.shared.readAllStepCount(last: 365) { (list) in
-                    self.months = self.sortByMonth(dayList: list)
-                    DispatchQueue.main.async {
-                        self.applySnapshot()
-                        self.collectionView.reloadData()
-                    }
-                }
-                HealthKitManager.shared.getTodayStepCount { (step) in
-                    self.todayStep = Int(step)
-                }
-                
-            }else {
-                
-            }
-        }
+//            }else {
+//
+//            }
+//        }
     }
     
     @objc func dateChanged(_ notification:Notification) {
         MotionManager.shared.stopCountingSteps()
+        
     }
     
-    func startCountingStep() {
-        MotionManager.shared.startCountingSteps { (step) in
-            print("step : \(step)")
-            self.addStep = Int(step)
+    @objc func todayStepChanged(_ notification:Notification) {
+        
+        DispatchQueue.main.async {
+            self.stepCntLbl.text = Int(SingletonManager.shared.todayStep).withCommas()
         }
     }
+    
     
     func sortByMonth(dayList:[DayItem]) -> [MonthItem]{
         let months = dayList.compactMap { Calendar.current.dateComponents([.month, .year], from: $0.date) }
@@ -125,28 +86,6 @@ class MainVC: UIViewController {
         }
         monthResult = monthResult.sorted(by: { $0.date > $1.date })
         return monthResult
-    }
-    
-    func sendNotification() {
-        let notificationContent = UNMutableNotificationContent()
-        notificationContent.title = "Title"
-        notificationContent.body = "Content"
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: trigger)
-        userNotificationCenter.add(request) { (error) in
-            if let error = error {
-                print("Notification Error: \(error)")
-                return
-            }
-        }
-    }
-    func requestNotificationAuthorization() {
-        let authOptions = UNAuthorizationOptions(arrayLiteral: .alert, .badge, .sound)
-        userNotificationCenter.requestAuthorization(options: authOptions) { (success, error) in
-            if let error = error {
-                print("Error : \(error)")
-            }
-        }
     }
     
     @IBAction func addData(_ sender:UIButton) {

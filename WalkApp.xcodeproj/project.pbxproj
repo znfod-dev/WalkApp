@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D0197FA22611CF27004F4831 /* SingletonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D044A1A3260C707400412F17 /* SingletonManager.swift */; };
 		D033C1B925FB27AC00F93962 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D033C1B825FB27AC00F93962 /* AppDelegate.swift */; };
 		D033C1BB25FB27AC00F93962 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D033C1BA25FB27AC00F93962 /* SceneDelegate.swift */; };
 		D033C1BD25FB27AC00F93962 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D033C1BC25FB27AC00F93962 /* ContentView.swift */; };
@@ -26,6 +27,7 @@
 		D033C22B25FB4BD900F93962 /* Int+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D033C21C25FB49ED00F93962 /* Int+Ex.swift */; };
 		D044A17A260B318800412F17 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A87C2608930B002FCB92 /* HealthKitManager.swift */; };
 		D044A1A4260C707400412F17 /* SingletonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D044A1A3260C707400412F17 /* SingletonManager.swift */; };
+		D08584732612F20B003FD828 /* NSNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08584722612F20B003FD828 /* NSNotification.swift */; };
 		D0A6A87D2608930B002FCB92 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A87C2608930B002FCB92 /* HealthKitManager.swift */; };
 		D0A88940260974CE007269FB /* Date+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A8893F260974CE007269FB /* Date+Ex.swift */; };
 		D0A8894426097741007269FB /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D033C1E125FB2CAB00F93962 /* HealthKit.framework */; };
@@ -78,6 +80,7 @@
 		D033C21225FB480900F93962 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D033C21C25FB49ED00F93962 /* Int+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Ex.swift"; sourceTree = "<group>"; };
 		D044A1A3260C707400412F17 /* SingletonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingletonManager.swift; sourceTree = "<group>"; };
+		D08584722612F20B003FD828 /* NSNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSNotification.swift; sourceTree = "<group>"; };
 		D0A6A87C2608930B002FCB92 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		D0A8893F260974CE007269FB /* Date+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ex.swift"; sourceTree = "<group>"; };
 		D0A8894326097741007269FB /* WalkWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WalkWidgetExtension.entitlements; sourceTree = "<group>"; };
@@ -219,6 +222,7 @@
 			children = (
 				D033C21C25FB49ED00F93962 /* Int+Ex.swift */,
 				D0A8893F260974CE007269FB /* Date+Ex.swift */,
+				D08584722612F20B003FD828 /* NSNotification.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -334,6 +338,7 @@
 				D033C1D025FB281300F93962 /* MainVC.swift in Sources */,
 				D033C1BB25FB27AC00F93962 /* SceneDelegate.swift in Sources */,
 				D033C1BD25FB27AC00F93962 /* ContentView.swift in Sources */,
+				D08584732612F20B003FD828 /* NSNotification.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,6 +348,7 @@
 			files = (
 				D033C22B25FB4BD900F93962 /* Int+Ex.swift in Sources */,
 				D033C20F25FB480800F93962 /* WalkWidget.swift in Sources */,
+				D0197FA22611CF27004F4831 /* SingletonManager.swift in Sources */,
 				D044A17A260B318800412F17 /* HealthKitManager.swift in Sources */,
 				D0A8894A2609786F007269FB /* MotionManager.swift in Sources */,
 			);
