@@ -36,6 +36,8 @@ class HealthKitManager: NSObject {
     
     let healthKitTypes:Set = [ HKObjectType.quantityType(forIdentifier: .stepCount)! ]
     
+    var authorizationStatus:HKAuthorizationStatus = .notDetermined
+    
     override init() {
         super.init()
         
@@ -50,19 +52,22 @@ class HealthKitManager: NSObject {
                 print("User has completed the authorization flow")
                 if HKHealthStore.isHealthDataAvailable() {
                     let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
-                    let authorizationStatus = self.healthStore.authorizationStatus(for: stepType)
-                    
-                    if authorizationStatus == .notDetermined {
+                    self.authorizationStatus = self.healthStore.authorizationStatus(for: stepType)
+                    switch self.authorizationStatus {
+                    case .notDetermined:
                         print("notDetermined")
                         completion(false)
-                    } else if authorizationStatus == .sharingDenied {
+                    case .sharingDenied:
                         print("sharingDenied")
                         completion(false)
-                    } else if authorizationStatus == .sharingAuthorized {
+                    case .sharingAuthorized:
                         print("sharingAuthorized")
                         completion(true)
-                    }else {
+                        break
+                     default:
+                        print("default")
                         completion(false)
+                        break
                     }
                 }else {
                     completion(false)
@@ -70,6 +75,16 @@ class HealthKitManager: NSObject {
             }
         }
     }
+    
+    func getAuthorizationStatus() -> Bool{
+        switch self.authorizationStatus {
+        case .sharingAuthorized:
+            return true
+        default:
+            return false
+        }
+    }
+    
     func readStepCount(last:Int, completion: @escaping ([MonthItem]) -> Void) {
         self.readAllStepCount(last: 365) { (list) in
             completion(self.sortByMonth(dayList: list))

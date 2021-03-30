@@ -42,6 +42,9 @@ class MainVC: UIViewController {
     
     func getData() {
         SingletonManager.shared.checkAuthorization()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.motionAuthChanged(_:)), name: .MotionAuthChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.healthkitAuthChanged(_:)), name: .HealthkitAuthChanged, object: nil)
+        
 //        HealthKitManager.shared.requestAuthorization { (success) in
 //            if success {
 //                HealthKitManager.shared.readAllStepCount(last: 365) { (list) in
@@ -69,6 +72,13 @@ class MainVC: UIViewController {
         }
     }
     
+    
+    @objc func motionAuthChanged(_ notification:Notification) {
+        
+    }
+    @objc func healthkitAuthChanged(_ notification:Notification) {
+        
+    }
     
     func sortByMonth(dayList:[DayItem]) -> [MonthItem]{
         let months = dayList.compactMap { Calendar.current.dateComponents([.month, .year], from: $0.date) }
