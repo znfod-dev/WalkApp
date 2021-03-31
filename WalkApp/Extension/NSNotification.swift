@@ -7,11 +7,11 @@
 
 import Foundation
 
-extension NSNotification.Name {
+public extension NSNotification.Name {
     
-    public static let TodayStepChanged: NSNotification.Name = NSNotification.Name("TodayStepChanged")
-    public static let MotionAuthChanged: NSNotification.Name = NSNotification.Name("MotionAuthChanged")
-    public static let HealthkitAuthChanged: NSNotification.Name = NSNotification.Name("HealthkitAuthChanged")
+    static let TodayStepChanged: NSNotification.Name = NSNotification.Name("TodayStepChanged")
+    static let MotionAuthChanged: NSNotification.Name = NSNotification.Name("MotionAuthChanged")
+    static let HealthkitAuthChanged: NSNotification.Name = NSNotification.Name("HealthkitAuthChanged")
     
     
 }

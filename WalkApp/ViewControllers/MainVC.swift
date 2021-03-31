@@ -25,6 +25,11 @@ class MainVC: UIViewController {
         super.viewDidLoad()
         self.initUI()
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         self.getData()
     }
     
@@ -32,7 +37,7 @@ class MainVC: UIViewController {
         self.dateLbl.text = Date().toString(format: .custom("yyyy년 MM월 dd일 : "))
         self.stepCntLbl.text = "0"
         self.initCollectionView()
-    
+        
     }
     
     func initNoti() {
@@ -45,19 +50,6 @@ class MainVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.motionAuthChanged(_:)), name: .MotionAuthChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.healthkitAuthChanged(_:)), name: .HealthkitAuthChanged, object: nil)
         
-//        HealthKitManager.shared.requestAuthorization { (success) in
-//            if success {
-//                HealthKitManager.shared.readAllStepCount(last: 365) { (list) in
-//                    self.months = self.sortByMonth(dayList: list)
-//                    DispatchQueue.main.async {
-//                        self.applySnapshot()
-//                        self.collectionView.reloadData()
-//                    }
-//                }
-//            }else {
-//
-//            }
-//        }
     }
     
     @objc func dateChanged(_ notification:Notification) {
@@ -74,10 +66,43 @@ class MainVC: UIViewController {
     
     
     @objc func motionAuthChanged(_ notification:Notification) {
+        let auth = SingletonManager.shared.motionAuth
         
+        if auth() {
+            
+        }else {
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "걸음 데이터에 접근이 거부되었습니다", message: "정확한 데이터 추적을 위해 접근을 허용해주세요\n확인을 누르시면 '설정'으로 이동합니다", preferredStyle: .alert)
+                let action = UIAlertAction(title: "확인", style: .default) { (action) in
+                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                }
+                let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+                alert.addAction(action)
+                alert.addAction(cancel)
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
     }
+    
     @objc func healthkitAuthChanged(_ notification:Notification) {
-        
+        let auth = SingletonManager.shared.healthkitAuth
+        if auth() {
+            HealthKitManager.shared.readAllStepCount(last: 365) { (list) in
+                self.months = self.sortByMonth(dayList: list)
+                self.reloadCollectionView()
+            }
+        }else {
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "걸음 데이터에 접근이 거부되었습니다", message: "정확한 데이터 추적을 위해 접근을 허용해주세요\n확인을 누르시면 '건강'앱으로 이동합니다", preferredStyle: .alert)
+                let action = UIAlertAction(title: "확인", style: .default) { (action) in
+                    UIApplication.shared.open(URL(string: "x-apple-health://")!)
+                }
+                let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+                alert.addAction(action)
+                alert.addAction(cancel)
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
     }
     
     func sortByMonth(dayList:[DayItem]) -> [MonthItem]{
@@ -99,8 +124,14 @@ class MainVC: UIViewController {
     }
     
     @IBAction func addData(_ sender:UIButton) {
-        self.applySnapshot()
-        self.collectionView.reloadData()
+        self.reloadCollectionView()
+    }
+    
+    func reloadCollectionView() {
+        DispatchQueue.main.async {
+            self.applySnapshot()
+            self.collectionView.reloadData()
+        }
     }
     
 }

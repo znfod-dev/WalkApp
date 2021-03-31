@@ -13,7 +13,7 @@ class SingletonManager: NSObject {
         return MotionManager.shared.getAuthorizationStatus()
     }
     lazy var healthkitAuth = {
-        return HealthKitManager.shared.
+        return HealthKitManager.shared.getAuthorizationStatus()
     }
     
     static let shared = SingletonManager()

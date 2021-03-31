@@ -20,7 +20,7 @@ class MotionManager: NSObject {
     static let shared = MotionManager()
     
     private let activityManager = CMMotionActivityManager()
-
+    
     private let pedometer = CMPedometer()
     
     var motionQueue = DispatchQueue.init(label: "Motion")
@@ -44,16 +44,11 @@ class MotionManager: NSObject {
             print("아직 정하지 못함")
             //
             if CMMotionActivityManager.isActivityAvailable() {
-//                self.activityManager.startActivityUpdates(to: .main) { _ in
-//                    if self.isUpdating == false {
-//                        self.startCountingSteps()
-//                    }
-//                }
                 self.activityManager.queryActivityStarting(from: Date(), to: Date(), to: .main) { (list, error) in
                     switch CMMotionActivityManager.authorizationStatus() {
                     case .authorized:
                         print("권한 확인됨")
-                            success(.authorized)
+                        success(.authorized)
                         break
                     default:
                         success(CMMotionActivityManager.authorizationStatus())
@@ -86,7 +81,7 @@ class MotionManager: NSObject {
     }
     
     func getAuthorizationStatus() -> Bool{
-        switch CMPedometer.authorizationStatus() {
+        switch CMMotionActivityManager.authorizationStatus() {
         case .authorized:
             return true
         default:

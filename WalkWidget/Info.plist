@@ -29,7 +29,5 @@
 	<string>걸음수를 체크하기 위해 필요합니다</string>
 	<key>NSHealthClinicalHealthRecordsShareUsageDescription</key>
 	<string>걸음수를 체크하기 위해 필요합니다</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>걸음수를 체크하기 위해 필요합니다</string>
 </dict>
 </plist>
