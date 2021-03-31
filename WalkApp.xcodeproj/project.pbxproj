@@ -29,6 +29,7 @@
 		D044A1A4260C707400412F17 /* SingletonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D044A1A3260C707400412F17 /* SingletonManager.swift */; };
 		D08584732612F20B003FD828 /* NSNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08584722612F20B003FD828 /* NSNotification.swift */; };
 		D08584762613FDA5003FD828 /* NSNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08584722612F20B003FD828 /* NSNotification.swift */; };
+		D08584C426146F8A003FD828 /* NumericAnimatedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08584C326146F8A003FD828 /* NumericAnimatedLabel.swift */; };
 		D0A6A87D2608930B002FCB92 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A87C2608930B002FCB92 /* HealthKitManager.swift */; };
 		D0A88940260974CE007269FB /* Date+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A8893F260974CE007269FB /* Date+Ex.swift */; };
 		D0A8894426097741007269FB /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D033C1E125FB2CAB00F93962 /* HealthKit.framework */; };
@@ -82,6 +83,7 @@
 		D033C21C25FB49ED00F93962 /* Int+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Ex.swift"; sourceTree = "<group>"; };
 		D044A1A3260C707400412F17 /* SingletonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingletonManager.swift; sourceTree = "<group>"; };
 		D08584722612F20B003FD828 /* NSNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSNotification.swift; sourceTree = "<group>"; };
+		D08584C326146F8A003FD828 /* NumericAnimatedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericAnimatedLabel.swift; sourceTree = "<group>"; };
 		D0A6A87C2608930B002FCB92 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		D0A8893F260974CE007269FB /* Date+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ex.swift"; sourceTree = "<group>"; };
 		D0A8894326097741007269FB /* WalkWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WalkWidgetExtension.entitlements; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				D033C1CF25FB281300F93962 /* MainVC.swift */,
+				D08584C326146F8A003FD828 /* NumericAnimatedLabel.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 				D033C1DB25FB292E00F93962 /* MotionManager.swift in Sources */,
 				D033C21D25FB49ED00F93962 /* Int+Ex.swift in Sources */,
 				D044A1A4260C707400412F17 /* SingletonManager.swift in Sources */,
+				D08584C426146F8A003FD828 /* NumericAnimatedLabel.swift in Sources */,
 				D033C1D025FB281300F93962 /* MainVC.swift in Sources */,
 				D033C1BB25FB27AC00F93962 /* SceneDelegate.swift in Sources */,
 				D033C1BD25FB27AC00F93962 /* ContentView.swift in Sources */,

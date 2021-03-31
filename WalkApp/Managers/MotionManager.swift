@@ -102,7 +102,13 @@ class MotionManager: NSObject {
         }
     }
     
-    func startCountingSteps( completion: @escaping (Double) -> Void) {
+    func startCountingSteps() {
+        self.startCountingSteps { (step) in
+            SingletonManager.shared.addStep = step
+        }
+    }
+    
+    private func startCountingSteps( completion: @escaping (Double) -> Void) {
         self.pedometer.startUpdates(from: Date()) { (data, error) in
             guard let data = data else {
                 return

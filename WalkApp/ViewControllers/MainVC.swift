@@ -12,7 +12,7 @@ import CoreMotion
 class MainVC: UIViewController {
     
     @IBOutlet weak var dateLbl: UILabel!
-    @IBOutlet weak var stepCntLbl: UILabel!
+    @IBOutlet weak var stepCntLbl: NumericAnimatedLabel!
     @IBOutlet weak var collectionView: UICollectionView!
     
     var dataSource: UICollectionViewDiffableDataSource<MonthItem, DataItem>!
@@ -24,13 +24,13 @@ class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initUI()
+        self.initNoti()
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.getData()
     }
     
     func initUI() {
@@ -41,26 +41,14 @@ class MainVC: UIViewController {
     }
     
     func initNoti() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.dateChanged(_:)), name: .NSCalendarDayChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.todayStepChanged(_:)), name: .TodayStepChanged, object: nil)
-    }
-    
-    func getData() {
-        SingletonManager.shared.checkAuthorization()
         NotificationCenter.default.addObserver(self, selector: #selector(self.motionAuthChanged(_:)), name: .MotionAuthChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.healthkitAuthChanged(_:)), name: .HealthkitAuthChanged, object: nil)
-        
-    }
-    
-    @objc func dateChanged(_ notification:Notification) {
-        MotionManager.shared.stopCountingSteps()
-        
     }
     
     @objc func todayStepChanged(_ notification:Notification) {
-        
         DispatchQueue.main.async {
-            self.stepCntLbl.text = Int(SingletonManager.shared.todayStep).withCommas()
+            self.stepCntLbl.updateCurrentValue(value: Int(SingletonManager.shared.todayStep))
         }
     }
     
@@ -69,7 +57,7 @@ class MainVC: UIViewController {
         let auth = SingletonManager.shared.motionAuth
         
         if auth() {
-            
+            MotionManager.shared.startCountingSteps()
         }else {
             DispatchQueue.main.async {
                 let alert = UIAlertController(title: "걸음 데이터에 접근이 거부되었습니다", message: "정확한 데이터 추적을 위해 접근을 허용해주세요\n확인을 누르시면 '설정'으로 이동합니다", preferredStyle: .alert)
@@ -85,8 +73,12 @@ class MainVC: UIViewController {
     }
     
     @objc func healthkitAuthChanged(_ notification:Notification) {
+        print("healthkitAuthChanged")
         let auth = SingletonManager.shared.healthkitAuth
         if auth() {
+            HealthKitManager.shared.getTodayStepCount { (step) in
+                SingletonManager.shared.todayStep = step
+            }
             HealthKitManager.shared.readAllStepCount(last: 365) { (list) in
                 self.months = self.sortByMonth(dayList: list)
                 self.reloadCollectionView()

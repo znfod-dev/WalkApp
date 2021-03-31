@@ -18,7 +18,11 @@ class SingletonManager: NSObject {
     
     static let shared = SingletonManager()
     
-    var todayStep:Double = 0.0
+    var todayStep:Double = 0.0 {
+        didSet {
+            NotificationCenter.default.post(name: .TodayStepChanged, object: nil)
+        }
+    }
     
     var addStep: Double = 0 {
         willSet(newVal) {
@@ -63,14 +67,6 @@ class SingletonManager: NSObject {
         }
     }
     
-    func startCountingStep() {
-        HealthKitManager.shared.getTodayStepCount { (step) in
-            self.todayStep = step
-            MotionManager.shared.startCountingSteps { (step) in
-                print("step : \(step)")
-                self.addStep = step
-            }
-        }
-    }
+    
     
 }

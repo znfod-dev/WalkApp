@@ -25,8 +25,6 @@ struct Provider: TimelineProvider {
         let refreshDate = Calendar.current.date(byAdding: .minute, value: 5, to: currentDate)!
       
         HealthKitManager.shared.getTodayStepCount { (step) in
-            MotionManager.shared.startCountingSteps { (step) in
-            }
             let entry = WidgetEntry(date: currentDate, walkCnt: Int(step))
             let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
             completion(timeline)

@@ -92,6 +92,7 @@ class HealthKitManager: NSObject {
     }
     
     func readAllStepCount(last:Int, completion: @escaping ([DayItem]) -> Void) {
+        print("readAllStepCount")
         var list = [DayItem]()
         for i in 0..<last {
             let timeInterval:TimeInterval = (-1 * 60 * 60 * 24) * Double(i)
@@ -130,7 +131,6 @@ class HealthKitManager: NSObject {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let startDay = Calendar.current.startOfDay(for: date)
         let lastDay = Date(timeInterval: (60 * 60 * 24)-1, since: startDay)
-        
         let predicate = HKQuery.predicateForSamples(withStart: startDay, end: lastDay, options: [.strictStartDate, .strictEndDate])
         let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: [.mostRecent, .cumulativeSum, .duration]) { (query, result, error) in
             guard let result = result, let sum = result.sumQuantity() else {
